@@ -1,0 +1,112 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <!--<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>input your data</title>
+
+</head>
+
+<body text="#000066" bgcolor="#99CCCC" link="#0000CC" vlink="#008000" alink="#0000CC">
+  <!--标题-->
+  电压U 
+  <input type="text" style="height:20px;width:50px;" value="" id="xmin" />V to <input type="text" style="height:20px;width:50px;" value="" id="xmax" />V
+    <br>
+  电流I <input type="text" style="height:20px;width:50px;" value="" id="ymin" />mA to <input type="text" style="height:20px;width:50px;" value="" id="ymax" />mA
+  <br>
+
+
+    <button id="btn_add">添加数据</button>
+    <br>
+    U (V) &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp I (mA)
+    <br>
+    <!--必要的，不然add的会不是空白文本框-->
+    <div id="function">
+    <span id="mod" style="display:none" name="0">
+      <input type="text" value="" style="height:20px;width:100px;" name="var_x" />
+      <input type="text" value="" style="height:20px;width:100px;" name="var_y" />
+
+      <button onclick="Delete(this.parentNode)">删除本行</button>
+    </span>
+  </div>
+
+  <button id="btn">画折线图</button> &nbsp <button id="btn_curve">光滑曲线</button> &nbsp <button id="btn_line">拟合直线</button> &nbsp <button id="btn_2nd">拟合二次曲线</button> &nbsp <button id="btn_exp">e指数拟合</button>
+  <br>
+  <button id="btn_clear">清除曲线</button> 
+  <br>
+  <br>
+  <canvas id="myCanvas" width="600" height="600">抱歉, 你的浏览器版本不支持canvas</canvas>
+
+</body>
+
+<script src="UI_plot.js"> </script>
+<script>
+// ById，大小写不同.
+  var btn = document.getElementById('btn');
+  var btn_add = document.getElementById('btn_add');
+  var btn_curve = document.getElementById('btn_curve');
+  var btn_line = document.getElementById('btn_line');
+  var btn_2nd = document.getElementById('btn_2nd');
+  var btn_exp = document.getElementById('btn_exp');
+  var btn_clear = document.getElementById('btn_clear');
+  var div = document.getElementsByClassName('box')[0];
+  var drawing = document.getElementById("myCanvas");
+  var context = drawing.getContext("2d");
+  var x_max = 600;
+  var y_max = 600;
+  var rec_size = 5;
+  // 注意后面要跟rec_size比较 Todo
+  //注意不要跟后面的xmax重名!
+  var x_bound = x_max / 6;
+  var y_bound = y_max / 6;
+
+  var x_total = x_max * 4 / 6;
+  var y_total = y_max * 4 / 6;
+  // 坐标原点就是:
+  // x_bound, y_max-y_bound
+  var x0 = x_bound;
+  var y0 = y_max - y_bound;
+
+  // 小数位
+  floatn = 3
+
+  var shift_x = 4;
+  var shift_x1 = 84;
+  var shift_y = 14; //越大，越靠下
+  var shift_y1 = 40; //越大，越靠下
+
+  Add();
+  draw_axis(); //按顺序执行，要放到后面.
+  btn_add.addEventListener('click', function () {
+    Add();
+  });
+  btn.addEventListener('click', function () {
+    run();
+  });
+  btn_curve.addEventListener('click', function () {
+    run_curve();
+  });
+
+  btn_line.addEventListener('click', function () {
+    run_line();
+  });
+
+  btn_2nd.addEventListener('click', function () {
+    run_2nd();
+  });
+
+  btn_exp.addEventListener('click', function () {
+    run_exp();
+  });
+
+  btn_clear.addEventListener('click', function () {
+    clear();
+    draw_axis();
+  });
+
+</script>
+
+
+</html>
